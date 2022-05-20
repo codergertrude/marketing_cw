@@ -3,6 +3,7 @@
 library(tidyverse)
 library(ggmosaic)
 library(ggpubr)
+library(broom)
 
 ### PROJECT 2
 
@@ -70,3 +71,56 @@ summary(m3)
 
 # confidence interval
 exp(confint(m3))
+
+## TASK 10 
+
+# logistic regression model of conversion on all variables, with interaction of discount and source
+m4 <- glm(conversion ~ .+ discount:source, data = data, family = binomial)
+
+# view coefficient estimates
+summary(m4)
+
+# confidence interval 
+exp(confint(m4))
+
+## TASK 11
+
+# calculate correlation between two variables
+cor(data$total_pages_visited, data$visit_duration)
+
+## TASK 12
+
+# removing visit_duration on new data object
+data_p2t12 <- data[,-5]
+
+# logistic regression model of conversion on all variables, with interaction of discount and source, without visit_duration
+m5 <- glm(conversion ~ .+ discount:source, data = data_p2t12, family = binomial)
+
+# view coefficient estimates
+summary(m5)
+
+# confidence interval 
+exp(confint(m5))
+
+## TASK 13
+
+# plot
+tidy(m5) %>% # tidy function from broom package
+  mutate(exp_beta_llci = exp(confint(m5))[, 1], # lower ci
+         exp_beta = exp(estimate), # odds ratio, midpoint
+         exp_beta_ulci = exp(confint(m5))[, 2]) %>% # upper 
+  select(term, estimate, exp_beta_llci, exp_beta, exp_beta_ulci) %>% 
+  ggplot(aes(x = term, 
+             y = exp_beta,
+             ymin = exp_beta_llci,
+             ymax = exp_beta_ulci)) +
+  geom_point(size = 4) + 
+  geom_errorbar(width = 0.25) +
+  # add a horizontal line where odds ratio == 1.0 (no effect):
+  geom_hline(yintercept = 1, linetype = "dashed", 
+             size = 1, color = "dodgerblue") + 
+  labs(title = "95% CI: Pass sign up odds by factor",
+       x = NULL,
+       y = "Likehood by Factor (odds ratio, main effect)") + 
+  coord_flip() + # rotates the plot
+  theme_pubr()
