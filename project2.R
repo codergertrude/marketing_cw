@@ -19,8 +19,11 @@ summary(m1)
 ## TASK 3
 
 # odds ratio for discountyes
-exp(1.10090)
+exp(coef(m1))
 
 ## TASK 4
 
+# confidence interval
+exp(confint(m1))
 
+## TASK 5
