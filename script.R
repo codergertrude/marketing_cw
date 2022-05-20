@@ -1,6 +1,9 @@
+### PROJECT 1
+
+## TASK 1
 data <- read.csv("office.csv", stringsAsFactors = FALSE)
 
-## task 2
+## TASK 2
 
 # attitudinal variable dataset
 data_att <- data[, 2:7]
@@ -16,3 +19,5 @@ for(i in 1:ncol(data_att)){
 
 # inspect for smallest min (low_prices) and largest max (return_policy)
 summary(data_att)
+
+
