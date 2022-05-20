@@ -9,15 +9,12 @@ data <- read.csv("office.csv", stringsAsFactors = FALSE)
 data_att <- data[, 2:7]
 
 # z-score standardisation
-for(i in 1:ncol(data_att)){
-  for(n in 1:nrow(data_att)){
-    m <- mean(data_att[, i])
-    s <- sd(data_att[, i])
-    data_att[n, i] <- (data_att[n, i] - m) - s
-  }
-}
+data_att <- scale(data_att, center=TRUE, scale=TRUE)
 
-# inspect for smallest min (low_prices) and largest max (return_policy)
+# inspect for smallest min (electronics) and largest max (electronics)
 summary(data_att)
+
+## TASK 3
+
 
 
