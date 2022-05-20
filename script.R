@@ -70,6 +70,9 @@ barchart(hier_clust_flex, main = "Segment Profiles")
 
 ## TASK 8
 
+# remove previous clustering
+data_att_norm <- data_att_norm[, -7]
+
 # 5-cluster solution
 hcluster_groups_5 <- cutree(hier_clust, k = 5)
 
@@ -77,5 +80,44 @@ hcluster_groups_5 <- cutree(hier_clust, k = 5)
 table(hcluster_groups_5)
 
 ## TASK 9
+
+# add cluster assignment column to normalised dataset
+data_att_norm <- data_att_norm %>% 
+  mutate(hcluster_groups_5 = hcluster_groups_5)
+
+# means for individual clusters 
+data_att_norm %>%
+  group_by(hcluster_groups_5) %>% # group by cluster
+  summarise_all(~ mean(.x)) %>% # calculate the mean per group 
+  print(width = Inf) # prints all variables (all columns)
+
+# flexclust profiles 
+hier_clust_flex_5 <- as.kcca(hier_clust, data_att_norm, k = 5)
+
+table(hcluster_groups_5, clusters(hier_clust_flex_5))
+
+barchart(hier_clust_flex_5, main = "Segment Profiles")
+
+## TASK 10
+
+## TASK 11
+
+## TASK 12
+
+# remove hierarchical clustering assignment col
+data_att_norm <- data_att_norm[, -7]
+
+# set seed
+set.seed(123)
+
+# k means clustering
+kmeans_clust <- kmeans(data_att_norm, 
+                       centers = 5, 
+                       iter.max = 1000,
+                       nstart = 100)
+
+table(kmeans_clust$cluster)
+
+## TASK 13
 
 
