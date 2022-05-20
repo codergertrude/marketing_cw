@@ -4,6 +4,7 @@ library(tidyverse)
 library(ggmosaic)
 library(ggpubr)
 library(broom)
+library(ROCR)
 
 ### PROJECT 2
 
@@ -143,10 +144,75 @@ names(data_p2t14)[names(data_p2t14) == 'V6'] <- 'base_probs'
 data_p2t15 <- data_p2t14
 
 # calculating indicator variable
-pred_conversion <- ifelse(predm5 > 0.5, 1, 0)
+pred_conversion <- as.data.frame(ifelse(predm5 > 0.5, "yes", "no"))
 data_p2t15[, 7] <- pred_conversion
 names(data_p2t15)[names(data_p2t15) == 'V7'] <- 'pred_conversion'
+data_p2t15$pred_conversion <- as.factor(data_p2t15$pred_conversion)
 
 ## TASK 16
 
+# accuracy calculation
+good_pred <- 0
 
+for(i in 1:nrow(data_p2t15)){
+  if(data_p2t15[i, 2] == data_p2t15[i, 7]){
+    good_pred <- 1 + good_pred
+  }
+}
+
+accuracy <- good_pred/nrow(data_p2t15)
+accuracy*100
+
+## TASK 17
+
+# AUC calculation
+ROCRpred <- prediction(predm5, data$conversion)
+as.numeric(performance(ROCRpred, "auc")@y.values)
+
+## TASK 18
+
+# new dataset 
+data_p2t18 <- data_p2t12
+
+# increase total_pages_visited values by 1
+for(i in 1:nrow(data_p2t18)){
+  data_p2t18[i, 4] <- data_p2t18[i, 4] + 1
+}
+
+# new model definition
+m6 <- glm(conversion ~ .+ discount:source, data = data_p2t18, family = binomial)
+
+# new predictions
+predm6 <- predict(m6, type = "response")
+
+# adding probabilities as new column 'new_prob'
+data_p2t18[, 6] <- predm6
+names(data_p2t18)[names(data_p2t18) == 'V6'] <- 'new_prob'
+
+# summary statistics for predictions, same as m5
+summary(predm6)
+
+## TASK 19
+
+# calculating indicator variable
+pred_conversion2 <- as.data.frame(ifelse(predm6 > 0.5, "yes", "no"))
+data_p2t18[, 7] <- pred_conversion2
+data_p2t18 <- data_p2t18 %>%
+  rename(pred_conversion = 7)
+data_p2t18$pred_conversion <- as.factor(data_p2t18$pred_conversion)
+
+# accuracy calculation
+good_pred_hyp <- 0
+
+for(i in 1:nrow(data_p2t18)){
+  if(data_p2t18[i, 2] == data_p2t18[i, 7]){
+    good_pred_hyp <- 1 + good_pred_hyp
+  }
+}
+
+accuracy_hyp <- good_pred_hyp/nrow(data_p2t18)
+accuracy_hyp*100
+
+# AUC calculation
+ROCRpred2 <- prediction(predm6, data$conversion)
+as.numeric(performance(ROCRpred2, "auc")@y.values)
