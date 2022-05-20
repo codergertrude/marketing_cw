@@ -124,3 +124,29 @@ tidy(m5) %>% # tidy function from broom package
        y = "Likehood by Factor (odds ratio, main effect)") + 
   coord_flip() + # rotates the plot
   theme_pubr()
+
+## TASK 14
+
+# make predictions on m5 
+predm5 <- predict(m5, type = "response")
+
+# note mean of probabilities
+summary(predm5)
+
+# add probabilities as new column 'base_probs'
+data_p2t14 <- data_p2t12
+data_p2t14[, 6] <- predm5 
+names(data_p2t14)[names(data_p2t14) == 'V6'] <- 'base_probs'
+
+## TASK 15
+
+data_p2t15 <- data_p2t14
+
+# calculating indicator variable
+pred_conversion <- ifelse(predm5 > 0.5, 1, 0)
+data_p2t15[, 7] <- pred_conversion
+names(data_p2t15)[names(data_p2t15) == 'V7'] <- 'pred_conversion'
+
+## TASK 16
+
+
