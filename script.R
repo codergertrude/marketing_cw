@@ -9,12 +9,21 @@ data <- read.csv("office.csv", stringsAsFactors = FALSE)
 data_att <- data[, 2:7]
 
 # z-score standardisation
-data_att <- scale(data_att, center=TRUE, scale=TRUE)
+data_att_norm <- as.data.frame(scale(data_att, center=TRUE, scale=TRUE))
 
 # inspect for smallest min (electronics) and largest max (electronics)
 summary(data_att)
 
 ## TASK 3
 
+# set seed
+set.seed(123)
 
+# calculate dist
+dist <- dist(data_att_norm, method = 'euclidean')
 
+# run clustering with method = "ward.D2"
+hier_clust <- hclust(dist, method = "ward.D2") 
+
+# plot dendogram
+plot(hier_clust)
