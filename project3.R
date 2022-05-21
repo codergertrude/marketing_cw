@@ -140,7 +140,7 @@ predict.share <- function(model, d) {
 
 ## TASK 14
 
-# create d_base for hypothetical market
+# create d_base for hypothetical market using present rows
 d_base <- as_tibble(data_p3t3[
   c(135, 31, 61, 20, 72),
   c("cloud_storage", "customer_support", "cloud_services", "price_n")
@@ -148,14 +148,43 @@ d_base <- as_tibble(data_p3t3[
 
 ## TASK 15
 
-# run function on model2 and d_base
+# run function on model2 and d_base, bind market share to last col of d_base
 d_base <- cbind(d_base, as.vector(predict.share(model2, d_base)))
-
-model2$coef
-
 colnames(d_base)[5] <- "predicted_share"
-
-# print
 d_base
+
+## TASK 16
+
+# change last row of hypothetical market
+d_base_2 <- as_tibble(data_p3t3[
+  c(135, 31, 61, 20, 69),
+  c("cloud_storage", "customer_support", "cloud_services", "price_n")
+])
+
+# bind marketshares for new hypothetical scenario
+d_base_2 <- cbind(d_base_2, as.vector(predict.share(model2, d_base_2)))
+colnames(d_base_2)[5] <- "predicted_share"
+
+d_base_2
+
+## TASK 17
+
+# compare both scenarios, percent change from scenario 1 to 2 (alternative 5 reduced by 17.72%)
+d_base_2[, 5] - d_base[, 5]
+
+## TASK 18
+
+# willingness to pay for customer support (pounds per month)
+- coef(model2)["customer_supportyes"] / coef(model2)["price_n"]
+
+## TASK 19
+
+# willingness to pay for 2000gb from 30gb (pounds per month)
+- coef(model2)["cloud_storage2000gb"] / coef(model2)["price_n"]
+
+## TASK 20
+
+# willingness to pay for 5000gb from 2000gb (pounds per month)
+- (coef(model2)["cloud_storage5000gb"] - coef(model2)["cloud_storage2000gb"]) / coef(model2)["price_n"]
 
 
