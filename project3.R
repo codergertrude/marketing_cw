@@ -1,5 +1,8 @@
 ### LIBRARIES
 
+library(dfidx)
+library(mlogit)
+
 ### PROJECT 3
 
 ## TASK 1
@@ -37,9 +40,9 @@ mean(data_p3t3$price_n)
 
 ## TASK 4
 
-# filtering dataset for choice == 1
 data_p3t4 <- data_p3t3
 
+# filtering dataset for choice == 1
 data_p3t4 <- filter(data_p3t4, choice == 1)
 
 # times 30gb was chosen (830)
@@ -49,3 +52,50 @@ table(data_p3t4$cloud_storage)
 prop.table(table(data_p3t4$cloud_services)) * 100
 
 ## TASK 5
+data_p3t5 <- data_p3t3
+
+# idx dataframe (column number same?)
+m_data <- dfidx(data_p3t5,
+                choice = "choice",
+                idx = list(c("choice_id", "respondent_id"),
+                           "alternative_id"))
+
+m_data
+
+## TASK 6
+
+# set seed
+set.seed(123)
+
+# multinominal logit 
+model1 <- mlogit(choice ~ 0 + cloud_storage + customer_support + cloud_services + price, data = m_data)
+
+# coefficients
+summary(model1)
+
+## TASK 7
+
+# set seed
+set.seed(123)
+
+# model2 with price_n
+model2 <- mlogit(choice ~ 0 + cloud_storage + customer_support + cloud_services + price_n, data = m_data)
+
+# coefficients
+summary(model2)
+
+## TASK 8
+
+# likelihood ratio test
+lrtest(model2, model1)
+
+## TASK 9
+
+# predictions
+predicted_probabilities <- predict(model2, m_data) %>% 
+  as_tibble()
+
+# view probabilities (probability of choosing 3rd alternative in 1st choice set: 0.0284%)
+predicted_probabilities
+
+## TASK 10
