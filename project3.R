@@ -12,11 +12,9 @@ data <- read.csv("cloud.csv", stringsAsFactors = TRUE)
 ## TASK 2
 
 # price and cloud_storage ordinal factors
-data$price <- factor(data$price, order = TRUE, 
-                     levels = c("p6", "p12", "p18"))
+data$price <- relevel(data$price, ref = 'p6')
 
-data$cloud_storage <- factor(data$cloud_storage, order = TRUE,
-                             levels = c("30gb", "2000gb", "5000gb"))
+data$cloud_storage <- relevel(data$cloud_storage, ref = '30gb')
 
 ## TASK 3
 
@@ -130,4 +128,34 @@ accuracy = (579 + 624 + 614)/3000
 accuracy
 
 ## TASK 13
+
+# custom function for hypothetical market share
+predict.share <- function(model, d) {
+  temp <- model.matrix(update(model$formula, 0 ~ .), data = d)[, -1] # generate dummy matrix
+  u <- temp %*% model$coef[colnames(temp)] # calculate utilities
+  probs <- t(exp(u) / sum(exp(u))) # calculate probabilities
+  colnames(probs) <- paste("alternative", colnames(probs))
+  return(probs)
+}
+
+## TASK 14
+
+# create d_base for hypothetical market
+d_base <- as_tibble(data_p3t3[
+  c(135, 31, 61, 20, 72),
+  c("cloud_storage", "customer_support", "cloud_services", "price_n")
+])
+
+## TASK 15
+
+# run function on model2 and d_base
+d_base <- cbind(d_base, as.vector(predict.share(model2, d_base)))
+
+model2$coef
+
+colnames(d_base)[5] <- "predicted_share"
+
+# print
+d_base
+
 
