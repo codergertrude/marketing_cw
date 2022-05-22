@@ -2,6 +2,7 @@
 
 library(tidyverse)
 library(flexclust)
+library(janitor)
 
 ### PROJECT 1
 
@@ -58,7 +59,7 @@ data_att_norm_p1t5 %>%
   print(width = Inf) # prints all variables (all columns)
 
 # flexclust profiles 
-hier_clust_flex <- as.kcca(hier_clust, data_att_norm_p1t5, k = 6)
+hier_clust_flex <- as.kcca(hier_clust, data_att_norm, k = 6)
 
 table(hcluster_groups, clusters(hier_clust_flex))
 
@@ -92,7 +93,7 @@ data_att_norm_p1t9 %>%
   print(width = Inf) # prints all variables (all columns)
 
 # flexclust profiles 
-hier_clust_flex_5 <- as.kcca(hier_clust, data_att_norm_p1t9, k = 5)
+hier_clust_flex_5 <- as.kcca(hier_clust, data_att_norm, k = 5)
 
 table(hcluster_groups_5, clusters(hier_clust_flex_5))
 
@@ -101,6 +102,36 @@ barchart(hier_clust_flex_5, main = "Segment Profiles")
 ## TASK 10
 
 ## TASK 11
+
+# add cluster groups to original dataset
+data_p1t11 <- data %>% mutate(hcluster_groups_5 = hcluster_groups_5)
+
+data_p1t11 <- data_p1t11 %>% 
+  mutate(professional = factor(professional))
+
+# demographic on age
+data_p1t11 %>%
+  tabyl(hcluster_groups_5, age) %>% 
+  adorn_totals(c("row", "col")) %>% 
+  adorn_percentages("row") %>%
+  adorn_pct_formatting(digits = 2) %>%
+  adorn_ns() 
+
+# demographic on income
+data_p1t11 %>%
+  tabyl(hcluster_groups_5, income) %>% 
+  adorn_totals(c("row", "col")) %>% 
+  adorn_percentages("row") %>%
+  adorn_pct_formatting(digits = 2) %>%
+  adorn_ns()
+
+# demographic on professional
+data_p1t11 %>%
+  tabyl(hcluster_groups_5, professional) %>% 
+  adorn_totals(c("row", "col")) %>% 
+  adorn_percentages("row") %>%
+  adorn_pct_formatting(digits = 2) %>%
+  adorn_ns()
 
 ## TASK 12
 

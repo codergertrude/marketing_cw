@@ -146,8 +146,10 @@ data_p2t15 <- data_p2t14
 # calculating indicator variable
 pred_conversion <- as.data.frame(ifelse(predm5 > 0.5, "yes", "no"))
 data_p2t15[, 7] <- pred_conversion
-names(data_p2t15)[names(data_p2t15) == 'V7'] <- 'pred_conversion'
+names(data_p2t15)[names(data_p2t15) == 'ifelse(predm5 > 0.5, "yes", "no")'] <- 'pred_conversion'
 data_p2t15$pred_conversion <- as.factor(data_p2t15$pred_conversion)
+
+table(data_p2t15$pred_conversion)
 
 ## TASK 16
 
