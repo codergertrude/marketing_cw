@@ -18,7 +18,7 @@ data_att <- data[, 2:7]
 data_att_norm <- as.data.frame(scale(data_att, center=TRUE, scale=TRUE))
 
 # inspect for smallest min (electronics) and largest max (electronics)
-summary(data_att)
+summary(data_att_norm)
 
 ## TASK 3
 
