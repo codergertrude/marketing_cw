@@ -138,6 +138,7 @@ summary(predm5)
 data_p2t14 <- data_p2t12
 data_p2t14[, 6] <- predm5 
 names(data_p2t14)[names(data_p2t14) == 'V6'] <- 'base_probs'
+mean(data_p2t14$base_probs)
 
 ## TASK 15
 
@@ -190,6 +191,7 @@ predm6 <- predict(m6, type = "response")
 # adding probabilities as new column 'new_prob'
 data_p2t18[, 6] <- predm6
 names(data_p2t18)[names(data_p2t18) == 'V6'] <- 'new_prob'
+mean(data_p2t18$new_prob)
 
 # summary statistics for predictions, same as m5
 summary(predm6)
