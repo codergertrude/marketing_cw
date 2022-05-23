@@ -155,9 +155,41 @@ table(kmeans_clust$cluster)
 data_att_norm_p1t13 <- data_att_norm %>% 
   mutate(kcluster_groups = kmeans_clust$cluster)
 
-# means for each cluster
+# means for each cluster (kcluster)
 data_att_norm_p1t13 %>%
   group_by(kcluster_groups) %>% # group by cluster
   summarise_all(~ mean(.x)) %>% # calculate the mean per group 
   print(width = Inf) # prints all variables (all columns)
 
+# means for each cluster (hcluster) 
+data_att_norm_p1t9 %>%
+  group_by(hcluster_groups_5) %>% # group by cluster
+  summarise_all(~ mean(.x)) %>% # calculate the mean per group 
+  print(width = Inf) # prints all variables (all columns)
+
+# cluster matches: 1-2, 2-3, 3-4, 4-5, 5-1
+
+# hits calculation (returns reassigned observations)
+hits = 0
+
+for(i in 1:nrow(data)){
+  if(data_att_norm_p1t9[i, 7] == 1 & data_att_norm_p1t13[i, 7] == 2){
+    hits = hits + 1
+    cat(sprintf("hits increment at i = %f\n", i))
+  } else if(data_att_norm_p1t9[i, 7] == 2 & data_att_norm_p1t13[i, 7] == 3){
+    hits = hits + 1
+    cat(sprintf("hits increment at i = %f\n", i))
+  } else if(data_att_norm_p1t9[i, 7] == 3 & data_att_norm_p1t13[i, 7] == 4){
+    hits = hits + 1
+    cat(sprintf("hits increment at i = %f\n", i))
+  } else if(data_att_norm_p1t9[i, 7] == 4 & data_att_norm_p1t13[i, 7] == 5){
+    hits = hits + 1
+    cat(sprintf("hits increment at i = %f\n", i))
+  } else if(data_att_norm_p1t9[i, 7] == 5 & data_att_norm_p1t13[i, 7] == 1){
+    hits = hits + 1
+    cat(sprintf("hits increment at i = %f\n", i))
+  }
+}
+
+# hit percentage
+1 - (hits/200)
