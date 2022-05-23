@@ -93,7 +93,7 @@ lrtest(model2, model1)
 predicted_probabilities <- predict(model2, m_data) %>% 
   as_tibble()
 
-# view probabilities (probability of choosing 3rd alternative in 1st choice set: 0.0284%)
+# view probabilities (probability of choosing 3rd alternative in 1st choice set: 2.84%)
 predicted_probabilities
 
 ## TASK 10
@@ -108,6 +108,7 @@ predicted_alternative <-
   ungroup() %>% 
   select(choice) %>% 
   as_vector()
+predicted_alternative
 
 ## TASK 11
 
@@ -117,6 +118,7 @@ selected_alternative <-
   filter(choice > 0) %>% 
   select(alternative_id) %>% 
   as_vector()
+selected_alternative
 
 ## TASK 12
 
