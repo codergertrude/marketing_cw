@@ -198,25 +198,5 @@ summary(predm6)
 
 ## TASK 19
 
-# calculating indicator variable
-pred_conversion2 <- as.data.frame(ifelse(predm6 > 0.5, "yes", "no"))
-data_p2t18[, 7] <- pred_conversion2
-data_p2t18 <- data_p2t18 %>%
-  rename(pred_conversion = 7)
-data_p2t18$pred_conversion <- as.factor(data_p2t18$pred_conversion)
-
-# accuracy calculation
-good_pred_hyp <- 0
-
-for(i in 1:nrow(data_p2t18)){
-  if(data_p2t18[i, 2] == data_p2t18[i, 7]){
-    good_pred_hyp <- 1 + good_pred_hyp
-  }
-}
-
-accuracy_hyp <- good_pred_hyp/nrow(data_p2t18)
-accuracy_hyp*100
-
-# AUC calculation
-ROCRpred2 <- prediction(predm6, data$conversion)
-as.numeric(performance(ROCRpred2, "auc")@y.values)
+# lift calculation
+(mean(data_p2t18$new_prob) - mean(data_p2t14$base_probs)) / mean(data_p2t14$base_probs)
