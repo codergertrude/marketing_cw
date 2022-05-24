@@ -3,6 +3,7 @@
 library(tidyverse)
 library(flexclust)
 library(janitor)
+library(cowplot)
 
 ### PROJECT 1
 
@@ -127,6 +128,21 @@ data_p1t11 <- data %>% mutate(hcluster_groups_5 = hcluster_groups_5)
 data_p1t11 <- data_p1t11 %>% 
   mutate(professional = factor(professional))
 
+# function to sort averages using clusters
+seg.summ <- function(data, groups) {
+  aggregate(data, list(groups), function(x) mean(as.numeric(x)))  
+}
+
+seg.summ(data, data_p1t11$hcluster_groups_5)
+
+# demographic on professional
+data_p1t11 %>%
+  tabyl(hcluster_groups_5, professional) %>% 
+  adorn_totals(c("row", "col")) %>% 
+  adorn_percentages("row") %>%
+  adorn_pct_formatting(digits = 2) %>%
+  adorn_ns()
+
 # demographic on age
 data_p1t11 %>%
   tabyl(hcluster_groups_5, age) %>% 
@@ -138,14 +154,6 @@ data_p1t11 %>%
 # demographic on income
 data_p1t11 %>%
   tabyl(hcluster_groups_5, income) %>% 
-  adorn_totals(c("row", "col")) %>% 
-  adorn_percentages("row") %>%
-  adorn_pct_formatting(digits = 2) %>%
-  adorn_ns()
-
-# demographic on professional
-data_p1t11 %>%
-  tabyl(hcluster_groups_5, professional) %>% 
   adorn_totals(c("row", "col")) %>% 
   adorn_percentages("row") %>%
   adorn_pct_formatting(digits = 2) %>%
