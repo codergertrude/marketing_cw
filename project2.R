@@ -12,6 +12,24 @@ library(ROCR)
 
 data <- read.csv("ecommerce.csv", stringsAsFactors = TRUE)
 
+summary(data)
+
+# plots for each variable
+plot_list = list()
+for(i in 1:ncol(data)){
+  var = names(data)[i]
+  if(is.numeric(data[, i]) == TRUE){
+    plot_list[[i]] = ggplot(data, aes(, data[, i])) + geom_histogram(bins = 10) + labs(title = var) + coord_flip()
+    print(plot_list[[i]])
+  }
+  else if(is.factor(data[, i]) == TRUE){
+    plot_list[[i]] = ggplot(data, aes(, data[, i])) + geom_bar() + labs(title = var) + coord_flip()
+    print(plot_list[[i]])
+  } else {
+    cat(sprintf("feature %s is not graphable\n", i))
+  }
+}
+
 ## TASK 2
 
 # logistic regression model of conversion on discount 
